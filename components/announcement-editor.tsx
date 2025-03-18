@@ -11,9 +11,11 @@ import {
 import { RefreshCw, CheckCircle, Send } from "lucide-react";
 import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
 import { Separator } from "@/components/ui/separator";
-import { createMemorialRecord } from "@/services/airtable";
+import { useMutation } from "convex/react";
+import { api } from "@/convex/_generated/api";
 
 export default function AnnouncementEditor() {
+  const createMemorial = useMutation(api.memorials.create);
   const [isSubmitted, setIsSubmitted] = useState(false);
   const [submittedText, setSubmittedText] = useState<string | null>(null);
   const [error, setError] = useState<string | null>(null);
@@ -45,8 +47,8 @@ export default function AnnouncementEditor() {
         throw new Error("L'annonce ne peut pas être vide");
       }
 
-      // Create Airtable record
-      await createMemorialRecord({
+      // Create Convex record instead of Airtable
+      await createMemorial({
         memberName,
         description: finalText,
       });
